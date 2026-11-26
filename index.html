@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gillani Mart - Online Shopping</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f8f5;color:#183523}
+header{background:#176b36;color:white;padding:20px;text-align:center}
+header h1{margin:0;font-size:28px}
+header p{margin:7px 0 0}
+.search{padding:16px;text-align:center}
+input{width:90%;max-width:500px;padding:13px;border:1px solid #ccc;border-radius:9px;font-size:16px}
+h2{text-align:center;color:#176b36}
+.categories{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;padding:10px}
+.categories button{background:#e2f2e6;border:1px solid #b8d9c0;padding:10px 15px;border-radius:20px;color:#176b36}
+.products{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:12px;max-width:900px;margin:auto}
+.product{background:white;border-radius:12px;padding:13px;box-shadow:0 2px 8px #0001}
+.product .photo{height:110px;background:#e8f5e9;border-radius:9px;display:grid;place-items:center;font-size:43px}
+.product h3{font-size:16px;margin:10px 0 5px}
+.price{color:#16803d;font-weight:bold}
+.product button,.checkout{background:#176b36;color:white;border:0;padding:11px;border-radius:8px;width:100%;margin-top:9px}
+.cart{background:white;padding:18px;margin:18px 12px;border-radius:12px}
+footer{text-align:center;background:#176b36;color:white;padding:20px;margin-top:25px}
+@media(min-width:650px){.products{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<header>
+<h1>GILLANI MART</h1>
+<p>Everything You Need, In One Place</p>
+</header>
+
+<div class="search">
+<input id="search" placeholder="Search products..." oninput="showProducts()">
+</div>
+
+<h2>Shop by Category</h2>
+<div class="categories">
+<button onclick="filter('All')">All</button>
+<button onclick="filter('Electronics')">Electronics</button>
+<button onclick="filter('Fashion')">Fashion</button>
+<button onclick="filter('Home')">Home</button>
+<button onclick="filter('Accessories')">Accessories</button>
+</div>
+
+<h2>Our Products</h2>
+<div class="products" id="products"></div>
+
+<div class="cart">
+<h2>🛒 My Shopping Cart</h2>
+<div id="cartItems">Your cart is empty.</div>
+<h3 id="total">Total: Rs. 0</h3>
+<button class="checkout" onclick="alert('Checkout system will be connected in the next development stage.')">Proceed to Checkout</button>
+</div>
+
+<footer>
+<h3>GILLANI MART</h3>
+<p>Green • White • Trust</p>
+<p>Online Shopping Across Pakistan</p>
+</footer>
+
+<script>
+const items=[
+{name:"Sample Mobile",price:15000,category:"Electronics",icon:"📱"},
+{name:"Stylish Shirt",price:1800,category:"Fashion",icon:"👕"},
+{name:"Home Lamp",price:1200,category:"Home",icon:"💡"},
+{name:"Wrist Watch",price:2500,category:"Accessories",icon:"⌚"}
+];
+let cart=[];
+let current="All";
+
+function showProducts(){
+let q=document.getElementById("search").value.toLowerCase();
+let list=items.filter(p=>(current==="All"||p.category===current)&&p.name.toLowerCase().includes(q));
+document.getElementById("products").innerHTML=list.map((p,i)=>`
+<div class="product">
+<div class="photo">${p.icon}</div>
+<h3>${p.name}</h3>
+<div class="price">Rs. ${p.price.toLocaleString()}</div>
+<button onclick="addCart('${p.name}')">Add to Cart</button>
+</div>`).join("")||"No products found";
+}
+function filter(c){current=c;showProducts()}
+function addCart(name){
+let p=items.find(x=>x.name===name);
+cart.push(p);
+showCart();
+}
+function showCart(){
+document.getElementById("cartItems").innerHTML=cart.length?
+cart.map((p,i)=>`${p.name} — Rs. ${p.price.toLocaleString()} <button onclick="removeItem(${i})" style="width:auto;padding:5px;background:#b3261e">Remove</button>`).join("<hr>"):
+"Your cart is empty.";
+let sum=cart.reduce((a,p)=>a+p.price,0);
+document.getElementById("total").innerText="Total: Rs. "+sum.toLocaleString();
+}
+function removeItem(i){cart.splice(i,1);showCart()}
+showProducts();
+</script>
+</body>
+</html>
